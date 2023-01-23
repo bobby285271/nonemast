@@ -84,6 +84,8 @@
           preCheck = ''
             buildPythonPath "$out $propagatedBuildInputs"
             patchPythonScript ../tests/test_autosquashing.py
+
+            export GSETTINGS_SCHEMA_DIR=${final.glib.makeSchemaPath "$out" "${pname}-${version}"}
           '';
 
           preFixup = ''

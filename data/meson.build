@@ -41,4 +41,9 @@ if appstream_util.found()
   )
 endif
 
+install_data(
+  'cz.ogion.Nonemast.gschema.xml',
+  install_dir: get_option('datadir') / 'glib-2.0' / 'schemas'
+)
+
 subdir('icons')
