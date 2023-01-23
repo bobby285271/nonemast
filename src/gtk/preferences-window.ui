@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- Requirements -->
+  <requires lib="gtk" version="4.0" />
+  <requires lib="adw" version="1.0" />
+
+  <template class="PreferencesWindow" parent="AdwPreferencesWindow">
+    <child>
+      <object class="AdwPreferencesPage">
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="description" translatable="yes">Restart the app to apply changes</property>
+            <child>
+              <object class="AdwEntryRow" id="reviewed_regex">
+                <property name="title" translatable="yes">_Commit Filter Regex</property>
+                <property name="use_underline">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwEntryRow" id="commit_message_prefix">
+                <property name="title" translatable="yes">_New commit message prefix</property>
+                <property name="use_underline">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <child>
+              <object class="GtkButton" id="reset_defaults">
+                <property name="label" translatable="yes">_Reset defaults</property>
+                <property name="use-underline">True</property>
+                <signal name="clicked" handler="on_reset_button_clicked" />
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

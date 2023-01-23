@@ -85,6 +85,8 @@
           checkPhase = ''
             runHook preCheck
 
+            export GSETTINGS_SCHEMA_DIR=${final.glib.makeSchemaPath "$out" "${pname}-${version}"}
+
             # buildPythonPackage has doCheck enable installCheckPhase but ninja registers regular checkPhase
             # so we need to run it manually.
             meson test --print-errorlogs

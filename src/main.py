@@ -8,7 +8,7 @@ from gi.repository import Ggit
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-from .window import NonemastWindow
+from .window import NonemastWindow, PreferencesWindow
 
 
 class NonemastApplication(Adw.Application):
@@ -57,7 +57,8 @@ class NonemastApplication(Adw.Application):
 
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
-        print("app.preferences action activated")
+        preferences = PreferencesWindow(self.props.active_window)
+        preferences.present()
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

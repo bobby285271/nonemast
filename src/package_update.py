@@ -12,8 +12,8 @@ import re
 from .bind_property_full import bind_property_full
 
 
-def has_changelog_reviewed_tag(line: str) -> bool:
-    return re.match(r"^Changelog-Reviewed-By: ", line)
+def has_changelog_reviewed_tag(regex: str, line: str) -> bool:
+    return re.match(regex, line)
 
 
 def try_getting_corresponding_github_link(url: str) -> str:
@@ -95,6 +95,7 @@ class PackageUpdate(GObject.Object):
         self._subject = subject
         self._commits = Gio.ListStore.new(CommitInfo)
         self._message_lines = []
+        self._settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
 
         bind_property_full(
             source=self,
@@ -149,8 +150,9 @@ class PackageUpdate(GObject.Object):
         if old_message_lines != self._message_lines:
             self.notify("final-commit-message")
 
+        regex = str(self._settings.get_value("reviewed-regex").unpack())
         self.props.changes_reviewed = any(
-            has_changelog_reviewed_tag(line) for line in self._message_lines
+            has_changelog_reviewed_tag(regex, line) for line in self._message_lines
         )
         url = find_changelog_link(self._message_lines)
         if url is None:
