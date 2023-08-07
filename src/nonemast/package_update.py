@@ -21,6 +21,7 @@ def try_getting_corresponding_github_link(url: str) -> str:
         "https://github.com/GNOME/",
     )
     url = url.replace("/-/", "/")
+    url = url.replace("...", "..")
 
     return url
 
