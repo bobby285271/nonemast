@@ -72,6 +72,8 @@ def view_commit_in_vcs_tool(
     viewer = None
     if shutil.which("sublime_merge") is not None:
         viewer = ["sublime_merge", "search", f"commit:{commit_id}"]
+    elif shutil.which("xdg-open") is not None:
+        viewer = ["xdg-open", f"https://github.com/NixOS/nixpkgs/commit/{commit_id}"]
 
     if viewer is None:
         make_error_dialog(
