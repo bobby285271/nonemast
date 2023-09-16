@@ -20,8 +20,10 @@ def try_getting_corresponding_github_link(url: str) -> str:
         "https://gitlab.gnome.org/GNOME/",
         "https://github.com/GNOME/",
     )
-    url = url.replace("/-/", "/")
-    url = url.replace("...", "..")
+
+    if "https://github.com/" in url:
+        url = url.replace("/-/", "/")
+        url = url.replace("...", "..")
 
     return url
 
