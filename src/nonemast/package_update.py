@@ -12,7 +12,7 @@ import re
 
 
 def has_changelog_reviewed_tag(line: str) -> bool:
-    return re.match(r"^Changelog-Reviewed-By: ", line) is not None
+    return re.match(r"^Changelog-reviewed-by: ", line) is not None
 
 
 def try_getting_corresponding_github_link(url: str) -> str:

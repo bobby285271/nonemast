@@ -257,7 +257,7 @@ class NonemastWindow(Adw.ApplicationWindow):
     ) -> None:
         original_commit_subject = parameter.get_string()
         signature = self.make_git_signature()
-        commit_message = f"squash! {original_commit_subject}\n\nChangelog-Reviewed-By: {signature_to_string(signature)}"
+        commit_message = f"squash! {original_commit_subject}\n\nChangelog-reviewed-by: {signature_to_string(signature)}"
         self.create_empty_commit(
             target_subject=original_commit_subject,
             message=commit_message,
