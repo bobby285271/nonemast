@@ -261,7 +261,7 @@ class NonemastWindow(Adw.ApplicationWindow):
     ) -> None:
         original_commit_subject = parameter.get_string()
         signature = self.make_git_signature()
-        commit_message = f"squash! {original_commit_subject}\n\nChangelog-Reviewed-By: {signature_to_string(signature)}"
+        commit_message = f"squash! {original_commit_subject}\n\nChangelog-reviewed-by: {signature_to_string(signature)}"
         self.create_empty_commit(
             target_subject=original_commit_subject,
             message=commit_message,
@@ -353,7 +353,7 @@ class NonemastWindow(Adw.ApplicationWindow):
         head: Ggit.OId = self._repo.get_head().get_target()
         current_commit: Ggit.Commit = self._repo.lookup_commit(head)
         try:
-            # Create an empty squash commit adding Changelog-Reviewed-By tag to the commit message.
+            # Create an empty squash commit adding Changelog-reviewed-by tag to the commit message.
             new_commit_oid: Ggit.OId = self._repo.create_commit(
                 update_ref="HEAD",
                 author=author,
