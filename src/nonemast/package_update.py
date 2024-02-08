@@ -130,6 +130,7 @@ class PackageUpdate(GObject.Object):
     commit_message_is_edited = GObject.Property(type=bool, default=False)
     editing_stack_page = GObject.Property(type=str, default="not-editing")
     final_commit_message_rich = GObject.Property(type=str)
+    changelog_reviewed_by_suggestion = GObject.Property(type=str, default="Changelog-reviewed-by: Foo bar <abc@example.com>")
 
     def __init__(
         self,
@@ -148,6 +149,15 @@ class PackageUpdate(GObject.Object):
         else:
             # self._settings = None
             self._settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
+
+        try:
+            a_config: Ggit.Config = self._repo.get_config().snapshot()
+            s_author_name = a_config.get_string("user.name")
+            s_author_email = a_config.get_string("user.email")
+        except:
+            s_author_name, s_author_email = "Foo bar", "123@example.com"
+
+        self.changelog_reviewed_by_suggestion = GLib.markup_escape_text(f"Changelog-reviewed-by: {s_author_name} <{s_author_email}>")
 
         self.bind_property(
             "subject",
