@@ -485,7 +485,7 @@ class PreferencesWindow(Adw.PreferencesWindow):
     __gtype_name__ = "PreferencesWindow"
 
     reviewed_regex = Gtk.Template.Child()
-    commit_message_prefix = Gtk.Template.Child()
+    # commit_message_prefix = Gtk.Template.Child()
 
     def __init__(self, window):
         Adw.PreferencesWindow.__init__(self)
@@ -497,14 +497,14 @@ class PreferencesWindow(Adw.PreferencesWindow):
         self.settings.bind(
             "reviewed-regex", self.reviewed_regex, "text", Gio.SettingsBindFlags.DEFAULT
         )
-        self.settings.bind(
-            "commit-message-prefix",
-            self.commit_message_prefix,
-            "text",
-            Gio.SettingsBindFlags.DEFAULT,
-        )
+        # self.settings.bind(
+        #     "commit-message-prefix",
+        #     self.commit_message_prefix,
+        #     "text",
+        #     Gio.SettingsBindFlags.DEFAULT,
+        # )
 
     @Gtk.Template.Callback()
     def on_reset_button_clicked(self, *args):
         self.settings.reset("reviewed-regex")
-        self.settings.reset("commit-message-prefix")
+        # self.settings.reset("commit-message-prefix")

@@ -16,12 +16,12 @@
                 <property name="use_underline">True</property>
               </object>
             </child>
-            <child>
+            <!-- <child>
               <object class="AdwEntryRow" id="commit_message_prefix">
                 <property name="title" translatable="yes">_New commit message prefix</property>
                 <property name="use_underline">True</property>
               </object>
-            </child>
+            </child> -->
           </object>
         </child>
         <child>
