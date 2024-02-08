@@ -262,18 +262,19 @@ class NonemastWindow(Adw.ApplicationWindow):
         action: Gio.SimpleAction,
         parameter: GLib.Variant,
     ) -> None:
-        original_commit_subject = parameter.get_string()
-        signature = self.make_git_signature()
-        if self._settings != None:
-            prefix = str(self._settings.get_value("commit-message-prefix").unpack())
-            commit_message = f"squash! {original_commit_subject}\n\n{prefix}{signature_to_string(signature)}"
-        else:
-            commit_message = f"squash! {original_commit_subject}\n\nChangelog-reviewed-by: {signature_to_string(signature)}"
-        self.create_empty_commit(
-            target_subject=original_commit_subject,
-            message=commit_message,
-            author=signature,
-        )
+        pass
+        # original_commit_subject = parameter.get_string()
+        # signature = self.make_git_signature()
+        # if self._settings != None:
+        #     prefix = str(self._settings.get_value("commit-message-prefix").unpack())
+        #     commit_message = f"squash! {original_commit_subject}\n\n{prefix}{signature_to_string(signature)}"
+        # else:
+        #     commit_message = f"squash! {original_commit_subject}\n\nChangelog-reviewed-by: {signature_to_string(signature)}"
+        # self.create_empty_commit(
+        #     target_subject=original_commit_subject,
+        #     message=commit_message,
+        #     author=signature,
+        # )
 
     def edit_commit_message(
         self,
