@@ -69,7 +69,7 @@
             libadwaita
           ];
 
-          pythonPath = with final.python3.pkgs; [
+          propagatedBuildInputs = with final.python3.pkgs; [
             pygobject3
             linkify-it-py
           ];
@@ -82,7 +82,7 @@
           doCheck = true;
 
           preCheck = ''
-            buildPythonPath "$out $pythonPath"
+            buildPythonPath "$out $propagatedBuildInputs"
             patchPythonScript ../tests/test_autosquashing.py
           '';
 
