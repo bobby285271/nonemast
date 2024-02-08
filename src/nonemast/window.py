@@ -173,7 +173,7 @@ class NonemastWindow(Adw.ApplicationWindow):
             self._settings = None
         else:
             # self._settings = None
-            self._settings = Gio.Settings(schema_id="cz.ogion.Nonemast")  
+            self._settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
 
         action = Gio.SimpleAction.new("ensure-coauthors")
         action.connect("activate", self.ensure_coauthors)
@@ -478,6 +478,7 @@ class NonemastWindow(Adw.ApplicationWindow):
         except GLib.Error as error:
             GLib.idle_add(self.show_error, error)
 
+
 @Gtk.Template(resource_path="/cz/ogion/Nonemast/gtk/preferences-window.ui")
 class PreferencesWindow(Adw.PreferencesWindow):
     __gtype_name__ = "PreferencesWindow"
@@ -492,8 +493,15 @@ class PreferencesWindow(Adw.PreferencesWindow):
         self.set_transient_for(window)
         self.settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
 
-        self.settings.bind("reviewed-regex", self.reviewed_regex, 'text', Gio.SettingsBindFlags.DEFAULT)
-        self.settings.bind("commit-message-prefix", self.commit_message_prefix, 'text', Gio.SettingsBindFlags.DEFAULT)
+        self.settings.bind(
+            "reviewed-regex", self.reviewed_regex, "text", Gio.SettingsBindFlags.DEFAULT
+        )
+        self.settings.bind(
+            "commit-message-prefix",
+            self.commit_message_prefix,
+            "text",
+            Gio.SettingsBindFlags.DEFAULT,
+        )
 
     @Gtk.Template.Callback()
     def on_reset_button_clicked(self, *args):
