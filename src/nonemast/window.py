@@ -436,6 +436,8 @@ class NonemastWindow(Adw.ApplicationWindow):
                 ).get_target(),
             )
 
+            # Traverse the commit list until one of the merge bases or a limit is reached.
+            n_revisions = 1000
             revwalker: Ggit.RevisionWalker = Ggit.RevisionWalker.new(self._repo)
             revwalker.set_sort_mode(
                 Ggit.SortMode.TIME | Ggit.SortMode.TOPOLOGICAL | Ggit.SortMode.REVERSE
@@ -451,6 +453,9 @@ class NonemastWindow(Adw.ApplicationWindow):
 
                 # Add commit to the group.
                 updates.setdefault(base_commit_subject, []).append(commit)
+
+                if (n_revisions := n_revisions - 1) == 0:
+                    break
 
             GLib.idle_add(self.populate_updates, updates)
         except GLib.Error as error:
