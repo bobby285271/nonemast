@@ -430,9 +430,8 @@ class NonemastWindow(Adw.ApplicationWindow):
             nixpkgs_base_master = get_merge_base(
                 self._repo,
                 head.get_target(),
-                self._repo.lookup_branch(
-                    os.environ['NONEMAST_NIXPKGS_BASE_COMMIT'],
-                    Ggit.BranchType.LOCAL,
+                self._repo.lookup_reference_dwim(
+                    os.environ['NONEMAST_NIXPKGS_BASE_COMMIT']
                 ).get_target(),
             )
 
