@@ -8,11 +8,12 @@ from gi.repository import GObject
 from linkify_it import LinkifyIt
 from typing import Optional
 import html
+import os
 import re
 
 
-def has_changelog_reviewed_tag(line: str) -> bool:
-    return re.match(r"^Changelog-reviewed-by: ", line) is not None
+def has_changelog_reviewed_tag(regex: str, line: str) -> bool:
+    return re.match(regex, line)
 
 
 def try_getting_corresponding_github_link(url: str) -> str:
@@ -142,6 +143,11 @@ class PackageUpdate(GObject.Object):
         self._subject = subject
         self._commits = Gio.ListStore.new(CommitInfo)
         self._message_lines: list[str] = []
+        if os.environ.get("NONEMAST_NO_GSCHEMA") == "1":
+            self._settings = None
+        else:
+            # self._settings = None
+            self._settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
 
         self.bind_property(
             "subject",
@@ -193,8 +199,13 @@ class PackageUpdate(GObject.Object):
         if old_message_lines != self._message_lines:
             self.notify("final-commit-message")
 
+        if self._settings != None:
+            regex = str(self._settings.get_value("reviewed-regex").unpack())
+        else:
+            regex = r"^Changelog-reviewed-by: "
+
         self.props.changes_reviewed = any(
-            has_changelog_reviewed_tag(line) for line in self._message_lines
+            has_changelog_reviewed_tag(regex, line) for line in self._message_lines
         )
         url = find_changelog_link(self._message_lines)
         if url is None:

@@ -169,6 +169,12 @@ class NonemastWindow(Adw.ApplicationWindow):
 
         self.props.updates = Gio.ListStore.new(PackageUpdate)
 
+        if os.environ.get("NONEMAST_NO_GSCHEMA") == "1":
+            self._settings = None
+        else:
+            # self._settings = None
+            self._settings = Gio.Settings(schema_id="cz.ogion.Nonemast")  
+
         action = Gio.SimpleAction.new("ensure-coauthors")
         action.connect("activate", self.ensure_coauthors)
         self.add_action(action)
@@ -258,7 +264,11 @@ class NonemastWindow(Adw.ApplicationWindow):
     ) -> None:
         original_commit_subject = parameter.get_string()
         signature = self.make_git_signature()
-        commit_message = f"squash! {original_commit_subject}\n\nChangelog-reviewed-by: {signature_to_string(signature)}"
+        if self._settings != None:
+            prefix = str(self._settings.get_value("commit-message-prefix").unpack())
+            commit_message = f"squash! {original_commit_subject}\n\n{prefix}{signature_to_string(signature)}"
+        else:
+            commit_message = f"squash! {original_commit_subject}\n\nChangelog-reviewed-by: {signature_to_string(signature)}"
         self.create_empty_commit(
             target_subject=original_commit_subject,
             message=commit_message,
