@@ -36,7 +36,9 @@ class NonemastApplication(Adw.Application):
         win = self.props.active_window
         if not win:
             if self._settings != None:
-                repo_path = Gio.File.new_for_path(str(self._settings.get_value("nixpkgs-path").unpack()))
+                repo_path = Gio.File.new_for_path(
+                    str(self._settings.get_value("nixpkgs-path").unpack())
+                )
             else:
                 repo_path = Gio.File.new_for_path("/home/bobby285271/nixpkgs")
             win = NonemastWindow(application=self, repo_path=repo_path)

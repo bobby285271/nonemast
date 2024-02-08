@@ -130,7 +130,9 @@ class PackageUpdate(GObject.Object):
     commit_message_is_edited = GObject.Property(type=bool, default=False)
     editing_stack_page = GObject.Property(type=str, default="not-editing")
     final_commit_message_rich = GObject.Property(type=str)
-    changelog_reviewed_by_suggestion = GObject.Property(type=str, default="Changelog-reviewed-by: Foo bar <abc@example.com>")
+    changelog_reviewed_by_suggestion = GObject.Property(
+        type=str, default="Changelog-reviewed-by: Foo bar <abc@example.com>"
+    )
 
     def __init__(
         self,
@@ -157,7 +159,9 @@ class PackageUpdate(GObject.Object):
         except:
             s_author_name, s_author_email = "Foo bar", "123@example.com"
 
-        self.changelog_reviewed_by_suggestion = GLib.markup_escape_text(f"Changelog-reviewed-by: {s_author_name} <{s_author_email}>")
+        self.changelog_reviewed_by_suggestion = GLib.markup_escape_text(
+            f"Changelog-reviewed-by: {s_author_name} <{s_author_email}>"
+        )
 
         self.bind_property(
             "subject",

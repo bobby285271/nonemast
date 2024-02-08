@@ -505,4 +505,3 @@ class PreferencesWindow(Adw.PreferencesWindow):
     def on_reset_button_clicked(self, *args):
         self.settings.reset("reviewed-regex")
         self.settings.reset("nixpkgs-path")
-
