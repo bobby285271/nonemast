@@ -17,15 +17,6 @@ jobs:
     - name: Build Nix package
       run: nix-build
 
-    - name: Configure outside of Nix sandbox
-      run: nix-shell --run 'meson setup _build'
-
-    - name: Build outside of Nix sandbox
-      run: nix-shell --run 'meson compile -C _build'
-
-    - name: Run tests
-      run: nix-shell --run 'meson test -C _build'
-
     - uses: actions/upload-artifact@v3
       if: failure()
       with:
