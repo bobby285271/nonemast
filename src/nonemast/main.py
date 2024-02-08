@@ -56,10 +56,7 @@ class NonemastApplication(Adw.Application):
         return -1
 
     def do_open(self, files: Sequence[Gio.File], n_files: int, hint: str) -> None:
-        if n_files != 1:
-            sys.exit("error: nonemast expects exactly one path as an argument.")
-
-        self.do_activate(repo_path=files[0])
+        sys.exit("error: arguments shouldn't be handled by do_open.")
 
     def on_quit_action(
         self,
