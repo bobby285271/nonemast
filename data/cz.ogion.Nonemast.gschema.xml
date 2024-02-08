@@ -4,8 +4,8 @@
     <key name="reviewed-regex" type="s">
       <default>"^Changelog-reviewed-by: "</default>
     </key>
-    <!-- <key name="commit-message-prefix" type="s">
-      <default>"Changelog-reviewed-by: "</default>
-    </key> -->
+    <key name="nixpkgs-path" type="s">
+      <default>"/home/bobby285271/nixpkgs"</default>
+    </key>
   </schema>
 </schemalist>
