@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [ $# != 1 ]; then
+    echo "You need exactly one arg for nixpkgs base commit"
+    exit 1
+fi
+
+exec @libexecdir@/nonemast-main --base-commit "$1"
