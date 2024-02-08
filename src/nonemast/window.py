@@ -428,11 +428,11 @@ class NonemastWindow(Adw.ApplicationWindow):
                 return
 
             try:
+                ref_resolved = Ggit.OId.new_from_string(os.environ['NONEMAST_NIXPKGS_BASE_COMMIT'])
+            except:
                 ref_resolved = self._repo.lookup_reference_dwim(
                     os.environ['NONEMAST_NIXPKGS_BASE_COMMIT']
                 ).get_target()
-            except GLib.Error:
-                ref_resolved = Ggit.OId.new_from_string(os.environ['NONEMAST_NIXPKGS_BASE_COMMIT'])
 
             nixpkgs_base_master = get_merge_base(
                 self._repo,
