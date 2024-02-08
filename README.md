@@ -1,3 +1,17 @@
+This fork includes various changes:
+
+- Hardcode various paths, including Nixpkgs dir.
+- Prefer direct comparison on github.com.
+- Support custom base commit.
+- Support viewing commits on github.com.
+
+Some changes are really opinionated and are not for others,
+you shouldn't use this fork if you are not bobby285271.
+
+Original README:
+
+------
+
 # Not Nearly Enough Masking Tape
 
 This is a tool for reviewing large Nixpkgs pull requests such as GNOME updates. All review information are tracked in commit messages.
