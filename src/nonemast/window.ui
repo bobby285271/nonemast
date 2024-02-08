@@ -20,9 +20,8 @@
 			<object class="AdwLeaflet" id="leaflet">
 				<property name="can-navigate-back">true</property>
 				<child>
-					<object class="GtkBox">
-						<property name="orientation">vertical</property>
-						<child>
+					<object class="AdwToolbarView">
+						<child type="top">
 							<object class="AdwHeaderBar">
 								<binding name="show-end-title-buttons">
 									<lookup name="folded">leaflet</lookup>
@@ -55,7 +54,7 @@
 								</child>
 							</object>
 						</child>
-						<child>
+						<property name="content">
 							<object class="GtkStack" id="updates_list_stack">
 								<child>
 									<object class="GtkStackPage">
@@ -147,7 +146,7 @@
 								</child>
 								<!-- sidebar -->
 							</object>
-						</child>
+						</property>
 					</object>
 				</child>
 				<child>
