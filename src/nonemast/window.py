@@ -428,19 +428,19 @@ class NonemastWindow(Adw.ApplicationWindow):
                 return
 
             try:
-                ref_resolved = Ggit.OId.new_from_string(os.environ['NONEMAST_NIXPKGS_BASE_COMMIT'])
+                ref_resolved = Ggit.OId.new_from_string(
+                    os.environ["NONEMAST_NIXPKGS_BASE_COMMIT"]
+                )
             except:
                 ref_resolved = self._repo.lookup_reference_dwim(
-                    os.environ['NONEMAST_NIXPKGS_BASE_COMMIT']
+                    os.environ["NONEMAST_NIXPKGS_BASE_COMMIT"]
                 ).get_target()
 
             # Handle fake but valid-in-format oid
             self._repo.lookup_commit(ref_resolved)
 
             nixpkgs_base_master = get_merge_base(
-                self._repo,
-                head.get_target(),
-                ref_resolved
+                self._repo, head.get_target(), ref_resolved
             )
 
             # Traverse the commit list until one of the merge bases or a limit is reached.
