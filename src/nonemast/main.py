@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2022 Jan Tojnar
 # SPDX-License-Identifier: MIT
 
+import os
 import sys
 
 from gi.repository import Adw
@@ -26,10 +27,18 @@ class NonemastApplication(Adw.Application):
         self.create_action("about", self.on_about_action)
         self.create_action("preferences", self.on_preferences_action)
 
+        if os.environ.get("NONEMAST_NO_GSCHEMA") == "1":
+            self._settings = None
+        else:
+            self._settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
+
     def do_activate(self, repo_path: Optional[Gio.File] = None) -> None:
         win = self.props.active_window
         if not win:
-            repo_path = Gio.File.new_for_path("/home/bobby285271/nixpkgs")
+            if self._settings != None:
+                repo_path = Gio.File.new_for_path(str(self._settings.get_value("nixpkgs-path").unpack()))
+            else:
+                repo_path = Gio.File.new_for_path("/home/bobby285271/nixpkgs")
             win = NonemastWindow(application=self, repo_path=repo_path)
         win.present()
 
