@@ -19,10 +19,21 @@ conf.set('pkgdatadir', nonemast_pkgdatadir)
 
 configure_file(
   input: 'nonemast.in',
-  output: 'nonemast',
+  output: 'nonemast-main',
   configuration: conf,
   install: true,
+  install_dir: nonemast_libexecdir,
+)
+
+script_conf = configuration_data()
+script_conf.set('libexecdir', nonemast_libexecdir)
+
+configure_file(
+  input: 'launcher.in',
+  output: 'nonemast',
+  install: true,
   install_dir: nonemast_bindir,
+  configuration: script_conf
 )
 
 nonemast_sources = [

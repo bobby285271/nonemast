@@ -28,6 +28,7 @@ dependency('libgit2-glib-1.0', version: ['>= 1.0.0'])
 
 nonemast_prefix = get_option('prefix')
 nonemast_bindir = nonemast_prefix / get_option('bindir')
+nonemast_libexecdir = nonemast_prefix / get_option('libexecdir')
 nonemast_localedir = nonemast_prefix / get_option('localedir')
 nonemast_datadir = nonemast_prefix / get_option('datadir')
 nonemast_pkgdatadir = nonemast_datadir / meson.project_name()
