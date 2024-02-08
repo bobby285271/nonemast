@@ -28,7 +28,7 @@ class NonemastApplication(Adw.Application):
     def do_activate(self, repo_path: Optional[Gio.File] = None) -> None:
         win = self.props.active_window
         if not win:
-            repo_path = Gio.File.new_for_path('/home/bobby285271/nixpkgs')
+            repo_path = Gio.File.new_for_path("/home/bobby285271/nixpkgs")
             win = NonemastWindow(application=self, repo_path=repo_path)
         win.present()
 
