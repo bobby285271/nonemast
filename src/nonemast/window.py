@@ -427,12 +427,17 @@ class NonemastWindow(Adw.ApplicationWindow):
                 GLib.idle_add(self.show_error, error)
                 return
 
+            try:
+                ref_resolved = self._repo.lookup_reference_dwim(
+                    os.environ['NONEMAST_NIXPKGS_BASE_COMMIT']
+                ).get_target()
+            except GLib.Error:
+                ref_resolved = Ggit.OId.new_from_string(os.environ['NONEMAST_NIXPKGS_BASE_COMMIT'])
+
             nixpkgs_base_master = get_merge_base(
                 self._repo,
                 head.get_target(),
-                self._repo.lookup_reference_dwim(
-                    os.environ['NONEMAST_NIXPKGS_BASE_COMMIT']
-                ).get_target(),
+                ref_resolved
             )
 
             # Traverse the commit list until one of the merge bases or a limit is reached.
