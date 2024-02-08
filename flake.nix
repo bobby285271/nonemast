@@ -48,7 +48,7 @@
       nonemast =
         final.stdenv.mkDerivation rec {
           pname = "nonemast";
-          version = "0.1.0";
+          version = "0.9.0+bobby285271";
 
           src = final.nix-gitignore.gitignoreSource [] ./.;
 

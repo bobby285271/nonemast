@@ -3,7 +3,7 @@
 
 project(
   'nonemast',
-  version: '0.1.0',
+  version: '0.9.0+bobby285271',
   meson_version: '>= 0.64.0',
   license: 'MIT',
   default_options: [
