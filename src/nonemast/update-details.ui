@@ -30,7 +30,7 @@
 								</binding>
 								<property name="child">
 									<object class="AdwButtonContent">
-										<property name="icon-name">preferences-system-time</property>
+										<property name="icon-name">preferences-system-time-symbolic</property>
 										<property name="label" translatable="yes">Not reviewed yet</property>
 									</object>
 								</property>
