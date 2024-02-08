@@ -434,6 +434,9 @@ class NonemastWindow(Adw.ApplicationWindow):
                     os.environ['NONEMAST_NIXPKGS_BASE_COMMIT']
                 ).get_target()
 
+            # Handle fake but valid-in-format oid
+            self._repo.lookup_commit(ref_resolved)
+
             nixpkgs_base_master = get_merge_base(
                 self._repo,
                 head.get_target(),
