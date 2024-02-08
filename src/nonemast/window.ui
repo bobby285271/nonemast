@@ -5,14 +5,14 @@
 	<template class="NonemastWindow" parent="AdwApplicationWindow">
 		
 		<property name="title" translatable="yes">Not Nearly Enough Masking Tape</property>
-		<property name="width-request">360</property>
-		<property name="height-request">294</property>
-		<property name="default-width">980</property>
-		<property name="default-height">640</property>
+		<property name="default-width">800</property>
+		<property name="default-height">500</property>
+		<property name="width-request">800</property>
+		<property name="height-request">500</property>
 		<child>
 		  <object class="AdwBreakpoint">
-			<condition>max-width: 500sp</condition>
-			<setter object="split_view" property="collapsed">True</setter>
+			<condition>max-width: 0sp</condition>
+			<setter object="split_view" property="collapsed">False</setter>
 		  </object>
 		</child>
 	
