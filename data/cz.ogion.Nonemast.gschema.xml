@@ -2,10 +2,10 @@
 <schemalist gettext-domain="code">
   <schema id="cz.ogion.Nonemast" path="/cz/ogion/Nonemast/">
     <key name="reviewed-regex" type="s">
-      <default>"^Changelog-reviewed-By: "</default>
+      <default>"^Changelog-reviewed-by: "</default>
     </key>
     <key name="commit-message-prefix" type="s">
-      <default>"Changelog-reviewed-By: "</default>
+      <default>"Changelog-reviewed-by: "</default>
     </key>
   </schema>
 </schemalist>
