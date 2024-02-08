@@ -21,7 +21,7 @@
 				<property name="sidebar">
 					<object class="AdwNavigationPage">
 						<property name="title" translatable="yes">Sidebar</property>
-          	<property name="child">
+          				<property name="child">
 							<object class="AdwToolbarView">
 								<child type="top">
 									<object class="AdwHeaderBar">
@@ -143,7 +143,6 @@
 												</property>
 											</object>
 										</child>
-										<!-- sidebar -->
 									</object>
 								</property>
 							</object>
@@ -159,39 +158,38 @@
 									<object class="AdwHeaderBar" />
 								</child>
 								<property name="content">
-											<object class="GtkStack" id="details_stack">
-												<child>
-													<object class="GtkStackPage">
-														<property name="name">no-update-selected</property>
-														<property name="child">
-															<object class="AdwStatusPage">
-																<property name="title" translatable="yes">No updates selected.</property>
-															</object>
-														</property>
+									<object class="GtkStack" id="details_stack">
+										<child>
+											<object class="GtkStackPage">
+												<property name="name">no-update-selected</property>
+												<property name="child">
+													<object class="AdwStatusPage">
+														<property name="title" translatable="yes">No updates selected.</property>
 													</object>
-												</child>
-												<child>
-													<object class="GtkStackPage">
-														<property name="name">details</property>
-														<property name="child">
-															<object class="GtkScrolledWindow">
-																<property name="hexpand">false</property>
-																<property name="vexpand">true</property>
-																<property name="hscrollbar-policy">never</property>
-																<child>
-																	<object class="UpdateDetails" id="update_details">
-																		<property name="margin-top">12</property>
-																		<property name="margin-bottom">12</property>
-																		<property name="margin-start">12</property>
-																		<property name="margin-end">12</property>
-																	</object>
-																</child>
-															</object>
-														</property>
-													</object>
-												</child>
+												</property>
 											</object>
-										<!-- content -->
+										</child>
+										<child>
+											<object class="GtkStackPage">
+												<property name="name">details</property>
+												<property name="child">
+													<object class="GtkScrolledWindow">
+														<property name="hexpand">false</property>
+														<property name="vexpand">true</property>
+														<property name="hscrollbar-policy">never</property>
+														<child>
+															<object class="UpdateDetails" id="update_details">
+																<property name="margin-top">12</property>
+																<property name="margin-bottom">12</property>
+																<property name="margin-start">12</property>
+																<property name="margin-end">12</property>
+															</object>
+														</child>
+													</object>
+												</property>
+											</object>			
+										</child>
+									</object>
 								</property>
 							</object>
 						</property>
