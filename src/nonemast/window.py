@@ -10,6 +10,7 @@ from gi.repository import Gtk
 from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Literal, Optional
+import os
 import re
 import shutil
 import subprocess
@@ -426,34 +427,21 @@ class NonemastWindow(Adw.ApplicationWindow):
                 GLib.idle_add(self.show_error, error)
                 return
 
-            # Determine merge bases between the current branch and master and staging branches.
-            merge_base_staging = get_merge_base(
+            nixpkgs_base_master = get_merge_base(
                 self._repo,
                 head.get_target(),
                 self._repo.lookup_branch(
-                    f"{nixpkgs_remote_name}/staging",
-                    Ggit.BranchType.REMOTE,
-                ).get_target(),
-            )
-            merge_base_master = get_merge_base(
-                self._repo,
-                head.get_target(),
-                self._repo.lookup_branch(
-                    f"{nixpkgs_remote_name}/master",
-                    Ggit.BranchType.REMOTE,
+                    os.environ['NONEMAST_NIXPKGS_BASE_COMMIT'],
+                    Ggit.BranchType.LOCAL,
                 ).get_target(),
             )
 
-            # Traverse the commit list until one of the merge bases or a limit is reached.
-            n_revisions = 500
             revwalker: Ggit.RevisionWalker = Ggit.RevisionWalker.new(self._repo)
             revwalker.set_sort_mode(
                 Ggit.SortMode.TIME | Ggit.SortMode.TOPOLOGICAL | Ggit.SortMode.REVERSE
             )
-            if merge_base_master is not None:
-                revwalker.hide(merge_base_master)
-            if merge_base_staging is not None:
-                revwalker.hide(merge_base_staging)
+            if nixpkgs_base_master is not None:
+                revwalker.hide(nixpkgs_base_master)
             oid = head.get_target()
             revwalker.push(oid)
 
@@ -463,9 +451,6 @@ class NonemastWindow(Adw.ApplicationWindow):
 
                 # Add commit to the group.
                 updates.setdefault(base_commit_subject, []).append(commit)
-
-                if (n_revisions := n_revisions - 1) == 0:
-                    break
 
             GLib.idle_add(self.populate_updates, updates)
         except GLib.Error as error:
