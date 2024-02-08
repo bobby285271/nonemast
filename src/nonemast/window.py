@@ -467,3 +467,25 @@ class NonemastWindow(Adw.ApplicationWindow):
             GLib.idle_add(self.populate_updates, updates)
         except GLib.Error as error:
             GLib.idle_add(self.show_error, error)
+
+@Gtk.Template(resource_path="/cz/ogion/Nonemast/gtk/preferences-window.ui")
+class PreferencesWindow(Adw.PreferencesWindow):
+    __gtype_name__ = "PreferencesWindow"
+
+    reviewed_regex = Gtk.Template.Child()
+    commit_message_prefix = Gtk.Template.Child()
+
+    def __init__(self, window):
+        Adw.PreferencesWindow.__init__(self)
+
+        self.props.modal = True
+        self.set_transient_for(window)
+        self.settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
+
+        self.settings.bind("reviewed-regex", self.reviewed_regex, 'text', Gio.SettingsBindFlags.DEFAULT)
+        self.settings.bind("commit-message-prefix", self.commit_message_prefix, 'text', Gio.SettingsBindFlags.DEFAULT)
+
+    @Gtk.Template.Callback()
+    def on_reset_button_clicked(self, *args):
+        self.settings.reset("reviewed-regex")
+        self.settings.reset("commit-message-prefix")

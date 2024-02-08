@@ -8,7 +8,7 @@ from gi.repository import Ggit
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-from .window import NonemastWindow
+from .window import NonemastWindow, PreferencesWindow
 from typing import Callable, Optional, Sequence, TypeVar
 
 
@@ -24,6 +24,7 @@ class NonemastApplication(Adw.Application):
         self.version = version
         self.create_action("quit", self.on_quit_action, ["<primary>q"])
         self.create_action("about", self.on_about_action)
+        self.create_action("preferences", self.on_preferences_action)
 
     def do_activate(self, repo_path: Optional[Gio.File] = None) -> None:
         win = self.props.active_window
@@ -58,6 +59,12 @@ class NonemastApplication(Adw.Application):
             copyright="© 2022 Jan Tojnar",
         )
         about.present()
+
+    def on_preferences_action(self, widget, _):
+        """Callback for the app.preferences action."""
+        print("app.preferences action activated")
+        preferences = PreferencesWindow(self.props.active_window)
+        preferences.present()
 
     T = TypeVar("T", bound=GLib.Variant | None)
 
