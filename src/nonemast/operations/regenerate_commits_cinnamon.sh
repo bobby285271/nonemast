@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-echo 
-
 # For Cinnamon workflow only, used in Cinnamon 6.0
 # https://github.com/NixOS/nixpkgs/pull/268515
 
@@ -100,7 +98,7 @@ commit_pkgs_change() {
 }
 
 main() {
-    zenity --info --title="Still WIP" --text="Lets try"
+    zenity --info --title="Still WIP" --text="This does not actually do stuff yet"
 
     nonemast_nixpkgs_path=$(gsettings get cz.ogion.Nonemast nixpkgs-path | sed 's/^.\(.*\).$/\1/')
     cd $nonemast_nixpkgs_path
