@@ -73,7 +73,7 @@ class NonemastApplication(Adw.Application):
 
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
-        print("app.preferences action activated")
+        # print("app.preferences action activated")
         preferences = PreferencesWindow(self.props.active_window)
         preferences.present()
 
