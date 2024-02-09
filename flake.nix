@@ -89,9 +89,9 @@
           '';
 
           preFixup = ''
-            wrapProgram $out/bin/nonemast \
-              --prefix PYTHONPATH : "$program_PYTHONPATH" \
-              ''${gappsWrapperArgs[@]}
+            gappsWrapperArgs+=(
+              --prefix PYTHONPATH : "$program_PYTHONPATH"
+            )
           '';
         };
     };
