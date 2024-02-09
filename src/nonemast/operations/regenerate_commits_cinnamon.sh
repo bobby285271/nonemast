@@ -38,8 +38,8 @@ is_worktree_clean() {
         ret_is_worktree_clean=0
     else
         git status
-        echo "Has uncommitted changes, please confirm"
-        read
+        echo "Has uncommitted changes"
+        # read
         ret_is_worktree_clean=1
     fi
 }
@@ -52,11 +52,7 @@ git_reset() {
 }
 
 get_cinnamon_pkgs_attr() {
-    if [ -z "${CANNOT_VISIT_GUC}" ]; then
-        local url="https://raw.githubusercontent.com/bobby285271/what-changed/master/data/003-cinnamon.json"
-    else 
-        local url="https://raw.fgit.cf/bobby285271/what-changed/master/data/003-cinnamon.json"
-    fi
+    local url="https://raw.githubusercontent.com/bobby285271/what-changed/master/data/003-cinnamon.json"
     echo "Fetch cinnamon info: $url"
     # This works f**king well since I maintain this
     ret_get_cinnamon_pkgs_attr=$(curl $url | \
@@ -98,17 +94,16 @@ commit_pkgs_change() {
 }
 
 main() {
-    zenity --info --title="Still WIP" --text="This does not actually do stuff yet"
+    zenity --info --title="Still WIP" --text="Please make sure you have save your work."
 
-    echo "$NONEMAST_NIXPKGS_BASE_COMMIT"
+    echo "Base commit: $NONEMAST_NIXPKGS_BASE_COMMIT"
 
     nonemast_nixpkgs_path=$(gsettings get cz.ogion.Nonemast nixpkgs-path | sed 's/^.\(.*\).$/\1/')
     cd $nonemast_nixpkgs_path
 
-    pwd
+    echo -n "Nixpkgs path: "; pwd
 
     echo_yellow "#################### Check ####################"
-    exit 1
 
     if [ "$#" != 0 ]; then
         echo "Expect no extra arg" && exit 1
