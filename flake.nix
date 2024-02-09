@@ -91,6 +91,7 @@
           preFixup = ''
             gappsWrapperArgs+=(
               --prefix PYTHONPATH : "$program_PYTHONPATH"
+              --prefix PATH : "${final.lib.makeBinPath [ final.gnome-text-editor ]}"
             )
           '';
         };
