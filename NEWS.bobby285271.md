@@ -8,6 +8,7 @@ Packaging changes:
 
 Other changes:
 
+- Convert Xfce GitLab URL to GitHub mirror URL.
 - The desktop file is removed as I don't use it.
 - Sidebar width is now hardcoded. For now responsive is not a focus in this fork.
 
