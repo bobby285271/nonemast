@@ -51,6 +51,5 @@ meson.add_devenv(devenv)
 
 gnome.post_install(
   glib_compile_schemas: true,
-  gtk_update_icon_cache: true,
-  update_desktop_database: true,
+  gtk_update_icon_cache: true
 )
