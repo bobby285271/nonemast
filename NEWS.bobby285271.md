@@ -1,4 +1,4 @@
-## Version 0.9.1 (unstable) - next
+## Version 0.9.1 (unstable) - 2024-02-10
 
 Upstream base: https://github.com/jtojnar/nonemast/commit/3aaa6d4e16555fe10df37d72aac10ac8b541e63d
 
