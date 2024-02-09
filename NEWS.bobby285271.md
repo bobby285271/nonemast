@@ -1,3 +1,11 @@
+## Version 0.9.2 (unstable) - next
+
+Upstream base: https://github.com/jtojnar/nonemast/commit/3aaa6d4e16555fe10df37d72aac10ac8b541e63d
+
+Other changes:
+
+- The regenerate commits program aborts when an existing one is running.
+
 ## Version 0.9.1 (unstable) - 2024-02-10
 
 Upstream base: https://github.com/jtojnar/nonemast/commit/3aaa6d4e16555fe10df37d72aac10ac8b541e63d
