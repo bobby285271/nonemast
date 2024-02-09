@@ -100,6 +100,8 @@ commit_pkgs_change() {
 main() {
     zenity --info --title="Still WIP" --text="This does not actually do stuff yet"
 
+    echo "$NONEMAST_NIXPKGS_BASE_COMMIT"
+
     nonemast_nixpkgs_path=$(gsettings get cz.ogion.Nonemast nixpkgs-path | sed 's/^.\(.*\).$/\1/')
     cd $nonemast_nixpkgs_path
 
