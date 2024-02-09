@@ -126,6 +126,9 @@ main() {
     for attr in $(echo $ret_get_cinnamon_pkgs_attr); do
         commit_pkgs_change "$attr" "$NONEMAST_NIXPKGS_BASE_COMMIT"
     done
+
+    echo_yellow "#################### Done ####################"
+    zenity --info --title="Done" --text="You might want to restart nonemast, please make to check the un-committed files"
 }
 
 main "$@"
