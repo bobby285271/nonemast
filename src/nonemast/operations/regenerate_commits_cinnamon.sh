@@ -2,6 +2,13 @@
 
 echo "Triggered, still WIP."
 
+nixpkgs_path=$(gsettings get cz.ogion.Nonemast nixpkgs-path | sed 's/^.\(.*\).$/\1/')
+
+cd $nixpkgs_path
+ls
+
+echo $NONEMAST_NIXPKGS_BASE_COMMIT
+
 # For Cinnamon workflow only, used in Cinnamon 6.0
 # https://github.com/NixOS/nixpkgs/pull/268515
 
