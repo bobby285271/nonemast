@@ -3,6 +3,11 @@
 # For Cinnamon workflow only, used in Cinnamon 6.0
 # https://github.com/NixOS/nixpkgs/pull/268515
 
+check_existing_script() {
+    # ret: number of process
+    ret_check_existing_script=$(pgrep -fa "operations/regenerate_commits_cinnamon.sh" | grep -v $$ | wc -l)
+}
+
 echo_yellow() {
     # $1: text to echo
     echo -e "\033[0;33m${1}\033[0m"
@@ -94,6 +99,14 @@ commit_pkgs_change() {
 }
 
 main() {
+    check_existing_script
+
+    echo $ret_check_existing_script
+    if [ "$ret_check_existing_script" != "1" ]; then
+        zenity --info --title="Oops" --text="Another regenerate program is running."
+        exit 1
+    fi
+
     zenity --info --title="Still WIP" --text="Please make sure you have save your work."
 
     echo "Base commit: $NONEMAST_NIXPKGS_BASE_COMMIT"
