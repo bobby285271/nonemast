@@ -24,9 +24,9 @@ def try_getting_corresponding_github_link(url: str) -> str:
 
     for i in ["xfce", "thunar-plugins", "panel-plugins", "apps"]:
         url = url.replace(
-        f"https://gitlab.xfce.org/{i}/",
-        "https://github.com/xfce-mirror/",
-    )
+            f"https://gitlab.xfce.org/{i}/",
+            "https://github.com/xfce-mirror/",
+        )
 
     if "https://github.com/" in url:
         url = url.replace("/-/", "/")
