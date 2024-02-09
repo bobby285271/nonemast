@@ -266,7 +266,16 @@ class NonemastWindow(Adw.ApplicationWindow):
         action: Gio.SimpleAction,
         parameter: None,
     ) -> None:
-        subprocess.Popen(['bash', os.path.join(os.path.dirname(__file__), 'operations', 'regenerate_commits_cinnamon.sh')])
+        subprocess.Popen(
+            [
+                "bash",
+                os.path.join(
+                    os.path.dirname(__file__),
+                    "operations",
+                    "regenerate_commits_cinnamon.sh",
+                ),
+            ]
+        )
 
     def mark_as_reviewed(
         self,
