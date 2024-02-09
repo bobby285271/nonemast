@@ -205,6 +205,10 @@
 				<attribute name="label" translatable="yes">Ensure _Co-authors</attribute>
 				<attribute name="action">win.ensure-coauthors</attribute>
 			</item>
+			<item>
+				<attribute name="label" translatable="yes">_Regenerate Commits (Cinnamon)</attribute>
+				<attribute name="action">win.regenerate-commits-cinnamon</attribute>
+			</item>
 		</section>
 		<section>
 			<item>

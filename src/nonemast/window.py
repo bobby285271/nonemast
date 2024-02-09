@@ -179,6 +179,10 @@ class NonemastWindow(Adw.ApplicationWindow):
         action.connect("activate", self.ensure_coauthors)
         self.add_action(action)
 
+        action = Gio.SimpleAction.new("regenerate-commits-cinnamon")
+        action.connect("activate", self.regenerate_commits_cinnamon)
+        self.add_action(action)
+
         action = Gio.SimpleAction.new("mark-as-reviewed", GLib.VariantType.new("s"))
         action.connect("activate", self.mark_as_reviewed)
         self.add_action(action)
@@ -256,6 +260,13 @@ class NonemastWindow(Adw.ApplicationWindow):
                 message=commit_message,
                 author=signature,
             )
+
+    def regenerate_commits_cinnamon(
+        self,
+        action: Gio.SimpleAction,
+        parameter: None,
+    ) -> None:
+        pass
 
     def mark_as_reviewed(
         self,
