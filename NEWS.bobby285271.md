@@ -1,3 +1,16 @@
+## Version 0.9.1 (unstable) - next
+
+Upstream base: https://github.com/jtojnar/nonemast/commit/3aaa6d4e16555fe10df37d72aac10ac8b541e63d
+
+Packaging changes:
+
+- The Nix packaging now ensures gnome-text-editor in PATH.
+
+Other changes:
+
+- The desktop file is removed as I don't use it.
+- Sidebar width is now hardcoded. For now responsive is not a focus in this fork.
+
 ## Version 0.9.0 (unstable) - 2024-02-09
 
 Upstream base: https://github.com/jtojnar/nonemast/commit/3aaa6d4e16555fe10df37d72aac10ac8b541e63d
