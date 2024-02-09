@@ -4,10 +4,12 @@ Upstream base: https://github.com/jtojnar/nonemast/commit/3aaa6d4e16555fe10df37d
 
 Packaging changes:
 
-- The Nix packaging now ensures gnome-text-editor in PATH.
+- The Nix packaging now ensures `gnome-text-editor` in `PATH`.
+- `zenity` is needed for shell scripts integration.
 
 Other changes:
 
+- Support regenerate commits (Cinnamon workflow only).
 - Convert Xfce GitLab URL to GitHub mirror URL.
 - The desktop file is removed as I don't use it.
 - Sidebar width is now hardcoded. For now responsive is not a focus in this fork.
