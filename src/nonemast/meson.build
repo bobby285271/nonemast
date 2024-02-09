@@ -41,6 +41,7 @@ nonemast_sources = [
   'git_utils.py',
   'main.py',
   'operations/ensure_coauthors.py',
+  'operations/regenerate_commits_cinnamon.sh',
   'package_update.py',
   'window.py',
 ]

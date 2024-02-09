@@ -266,7 +266,7 @@ class NonemastWindow(Adw.ApplicationWindow):
         action: Gio.SimpleAction,
         parameter: None,
     ) -> None:
-        pass
+        print(str(os.path.join(os.path.dirname(__file__), 'operations', 'regenerate_commits_cinnamon.sh')))
 
     def mark_as_reviewed(
         self,
