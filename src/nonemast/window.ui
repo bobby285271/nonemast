@@ -117,6 +117,9 @@
 																<!-- <property name="hscrollbar-policy">never</property> -->
 																<child>
 																	<object class="GtkListView" id="updates_list_view">
+																		<style>
+																			<class name="navigation-sidebar"/>
+																		</style>
 																		<property name="show-separators">true</property>
 																		<property name="factory">
 																			<object class="GtkBuilderListItemFactory">
