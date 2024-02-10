@@ -141,7 +141,7 @@ main() {
     done
 
     echo_yellow "#################### Done ####################"
-    zenity --info --title="Done" --text="You might want to restart nonemast, please make to check the un-committed files"
+    zenity --info --title="Done" --text="You might want to restart nonemast, please make sure to check the un-committed files"
 }
 
 main "$@"
