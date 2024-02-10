@@ -5,6 +5,7 @@ Upstream base: https://github.com/jtojnar/nonemast/commit/3aaa6d4e16555fe10df37d
 Other changes:
 
 - The regenerate commits program aborts when an existing one is running.
+- Support update arrow style in commit message subject (GNOME workflow only).
 
 ## Version 0.9.1 (unstable) - 2024-02-10
 

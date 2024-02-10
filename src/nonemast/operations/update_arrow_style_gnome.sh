@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-echo "triggered"
-
-exit 1
-
 check_existing_script() {
     # ret: number of process
-    ret_check_existing_script=$(pgrep -fa "operations/regenerate_commits_cinnamon.sh" | grep -v $$ | wc -l)
+    ret_check_existing_script=$(pgrep -fa "operations/update_arrow_style_gnome.sh" | grep -v $$ | wc -l)
 }
 
 echo_yellow() {
@@ -50,61 +46,12 @@ is_worktree_clean() {
     fi
 }
 
-git_reset() {
-    # $1: commit reset to, no --hard
-    echo "You are currently on:"
-    git rev-parse HEAD
-    git reset $1
-}
-
-get_cinnamon_pkgs_attr() {
-    local url="https://raw.githubusercontent.com/bobby285271/what-changed/master/data/003-cinnamon.json"
-    echo "Fetch cinnamon info: $url"
-    # This works f**king well since I maintain this
-    ret_get_cinnamon_pkgs_attr=$(curl $url | \
-        grep '"attr_path": "' | sed 's/ //g' | sed 's/"attr_path":"//g' | sed 's/"$//g')
-}
-
-commit_pkgs_change() {
-    # $1: pkgs attr
-    # $2: base commit
-    echo_yellow "!!!!! Processing $1"
-
-
-    nix_eval_checkout "${1}.version" "$2"
-    local old_version=$ret_nix_eval_checkout
-
-    nix_eval_wip "${1}.version"
-    local new_version=$ret_nix_eval_wip
-
-    nix_eval_checkout "${1}.src.rev" "$2"
-    local old_rev=$ret_nix_eval_checkout
-
-    nix_eval_wip "${1}.src.rev"
-    local new_rev=$ret_nix_eval_wip
-
-
-    if [ "$new_rev" == "$old_rev" ]; then
-        return
-    fi
-
-    nix_eval_wip "${1}.src.meta.homepage"
-    local diffurl="$ret_nix_eval_wip/compare/${old_rev}...${new_rev}"
-
-    nix_eval_wip "${1}.meta.position"
-    local dir_to_add=$(dirname $(echo $ret_nix_eval_wip | cut -d : -f 1))
-
-    echo_yellow "### Dir to add: $dir_to_add"
-    git add $dir_to_add
-    git commit -m "${1}: ${old_version} -> ${new_version}" -m "${diffurl}"
-}
-
 main() {
     check_existing_script
 
     echo $ret_check_existing_script
     if [ "$ret_check_existing_script" != "1" ]; then
-        zenity --info --title="Oops" --text="Another regenerate program is running."
+        zenity --info --title="Oops" --text="Another arrow style update program is running."
         exit 1
     fi
 
@@ -130,19 +77,13 @@ main() {
 
     is_worktree_clean
 
-    echo_yellow "#################### Reset ####################"
-    git_reset "$NONEMAST_NIXPKGS_BASE_COMMIT"
-
-    echo_yellow "#################### Get cinnamon pkglist ####################"
-    get_cinnamon_pkgs_attr
-
-    echo_yellow "#################### Commit ####################"
-    for attr in $(echo $ret_get_cinnamon_pkgs_attr); do
-        commit_pkgs_change "$attr" "$NONEMAST_NIXPKGS_BASE_COMMIT"
-    done
+    echo_yellow "#################### Rebase ####################"
+    export GIT_EDITOR="sed 's/->/→/g' -i"
+    export GIT_SEQUENCE_EDITOR="sed 's/^pick /reword /' -i"
+    git rebase $NONEMAST_NIXPKGS_BASE_COMMIT -i
 
     echo_yellow "#################### Done ####################"
-    zenity --info --title="Done" --text="You might want to restart nonemast, please make sure to check the un-committed files"
+    zenity --info --title="Done" --text="You might want to restart nonemast"
 }
 
 main "$@"
