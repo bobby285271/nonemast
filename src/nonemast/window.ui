@@ -5,9 +5,9 @@
 	<template class="NonemastWindow" parent="AdwApplicationWindow">
 		
 		<property name="title" translatable="yes">Not Nearly Enough Masking Tape</property>
-		<property name="default-width">800</property>
+		<property name="default-width">850</property>
 		<property name="default-height">500</property>
-		<property name="width-request">800</property>
+		<property name="width-request">850</property>
 		<property name="height-request">500</property>
 		<child>
 		  <object class="AdwBreakpoint">
@@ -18,7 +18,7 @@
 	
 		<child>
 			<object class="AdwNavigationSplitView" id="split_view">
-				<property name="min-sidebar-width">320</property>
+				<property name="min-sidebar-width">350</property>
 				<property name="sidebar">
 					<object class="AdwNavigationPage">
 						<property name="title" translatable="yes">Sidebar</property>

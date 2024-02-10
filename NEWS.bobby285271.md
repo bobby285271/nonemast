@@ -6,6 +6,7 @@ Other changes:
 
 - The regenerate commits program aborts when an existing one is running.
 - Support update arrow style in commit message subject (GNOME workflow only).
+- Misc style updates.
 
 ## Version 0.9.1 (unstable) - 2024-02-10
 
