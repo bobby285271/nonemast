@@ -183,6 +183,10 @@ class NonemastWindow(Adw.ApplicationWindow):
         action.connect("activate", self.regenerate_commits_cinnamon)
         self.add_action(action)
 
+        action = Gio.SimpleAction.new("update-arrow-style-gnome")
+        action.connect("activate", self.update_arrow_style_gnome)
+        self.add_action(action)
+
         action = Gio.SimpleAction.new("mark-as-reviewed", GLib.VariantType.new("s"))
         action.connect("activate", self.mark_as_reviewed)
         self.add_action(action)
@@ -273,6 +277,23 @@ class NonemastWindow(Adw.ApplicationWindow):
                     os.path.dirname(__file__),
                     "operations",
                     "regenerate_commits_cinnamon.sh",
+                ),
+            ]
+        )
+
+    def update_arrow_style_gnome(
+        self,
+        action: Gio.SimpleAction,
+        parameter: None,
+    ) -> None:
+        # There are lots of conventions here and there, that's fine
+        subprocess.Popen(
+            [
+                "bash",
+                os.path.join(
+                    os.path.dirname(__file__),
+                    "operations",
+                    "update_arrow_style_gnome.sh",
                 ),
             ]
         )

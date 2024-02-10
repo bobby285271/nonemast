@@ -209,6 +209,10 @@
 				<attribute name="label" translatable="yes">_Regenerate Commits (Cinnamon)</attribute>
 				<attribute name="action">win.regenerate-commits-cinnamon</attribute>
 			</item>
+			<item>
+				<attribute name="label" translatable="yes">Update _Arrow Style in Subject (GNOME)</attribute>
+				<attribute name="action">win.update-arrow-style-gnome</attribute>
+			</item>
 		</section>
 		<section>
 			<item>
