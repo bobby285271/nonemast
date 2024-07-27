@@ -3,9 +3,31 @@
 
 moduledir = join_paths(nonemast_pkgdatadir, 'nonemast')
 
+blueprint_sources = files(
+  'update-details-commit-item.blp',
+  'gtk/help-overlay.blp',
+  'window.blp',
+  'update-details.blp',
+  'update-item.blp',
+)
+
+blueprints = custom_target(
+  'blueprints',
+  input: blueprint_sources,
+  output: '.',
+  command: [
+    blueprint_compiler,
+    'batch-compile',
+    '@OUTPUT@',
+    '@CURRENT_SOURCE_DIR@',
+    '@INPUT@',
+  ],
+)
+
 gnome.compile_resources(
   'nonemast',
   'nonemast.gresource.xml',
+  dependencies: blueprints,
   gresource_bundle: true,
   install: true,
   install_dir: nonemast_pkgdatadir,
@@ -19,30 +41,18 @@ conf.set('pkgdatadir', nonemast_pkgdatadir)
 
 configure_file(
   input: 'nonemast.in',
-  output: 'nonemast-main',
+  output: 'nonemast',
   configuration: conf,
   install: true,
-  install_dir: nonemast_libexecdir,
-)
-
-script_conf = configuration_data()
-script_conf.set('libexecdir', nonemast_libexecdir)
-
-configure_file(
-  input: 'launcher.in',
-  output: 'nonemast',
-  install: true,
   install_dir: nonemast_bindir,
-  configuration: script_conf
 )
 
 nonemast_sources = [
   '__init__.py',
   'git_utils.py',
   'main.py',
+  'message_utils.py',
   'operations/ensure_coauthors.py',
-  'operations/regenerate_commits_cinnamon.sh',
-  'operations/update_arrow_style_gnome.sh',
   'package_update.py',
   'window.py',
 ]

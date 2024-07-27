@@ -10,13 +10,13 @@ from gi.repository import Gtk
 from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Literal, Optional
-import os
 import re
 import shutil
 import subprocess
 import tempfile
 import threading
 from .git_utils import signature_to_string
+from .message_utils import get_base_commit_subject
 from .operations.ensure_coauthors import get_missing_coauthors
 from .package_update import PackageUpdate
 
@@ -73,8 +73,6 @@ def view_commit_in_vcs_tool(
     viewer = None
     if shutil.which("sublime_merge") is not None:
         viewer = ["sublime_merge", "search", f"commit:{commit_id}"]
-    elif shutil.which("xdg-open") is not None:
-        viewer = ["xdg-open", f"https://github.com/NixOS/nixpkgs/commit/{commit_id}"]
 
     if viewer is None:
         make_error_dialog(
@@ -104,10 +102,6 @@ def get_merge_base(
         return repo.merge_base(oid_one, oid_two)
     except GLib.Error as e:
         return None
-
-
-def get_base_commit_subject(subject: str) -> str:
-    return re.sub(r"^(fixup! |squash! |amend! )+", "", subject)
 
 
 @Gtk.Template(resource_path="/cz/ogion/Nonemast/update-details.ui")
@@ -158,33 +152,26 @@ class NonemastWindow(Adw.ApplicationWindow):
     update_details = Gtk.Template.Child()
 
     _repo: Ggit.Repository
+    _base_revspec: Optional[str]
 
-    def __init__(self, repo_path: Gio.File, **kwargs):
+    def __init__(
+        self,
+        repo_path: Gio.File,
+        base_revspec: Optional[str],
+        **kwargs,
+    ):
         super().__init__(**kwargs)
 
         self._repo_path = repo_path
+        self._base_revspec = base_revspec
 
         self._search_query = None
         self._filter_reviewed = None
 
         self.props.updates = Gio.ListStore.new(PackageUpdate)
 
-        if os.environ.get("NONEMAST_NO_GSCHEMA") == "1":
-            self._settings = None
-        else:
-            # self._settings = None
-            self._settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
-
         action = Gio.SimpleAction.new("ensure-coauthors")
         action.connect("activate", self.ensure_coauthors)
-        self.add_action(action)
-
-        action = Gio.SimpleAction.new("regenerate-commits-cinnamon")
-        action.connect("activate", self.regenerate_commits_cinnamon)
-        self.add_action(action)
-
-        action = Gio.SimpleAction.new("update-arrow-style-gnome")
-        action.connect("activate", self.update_arrow_style_gnome)
         self.add_action(action)
 
         action = Gio.SimpleAction.new("mark-as-reviewed", GLib.VariantType.new("s"))
@@ -265,57 +252,19 @@ class NonemastWindow(Adw.ApplicationWindow):
                 author=signature,
             )
 
-    def regenerate_commits_cinnamon(
-        self,
-        action: Gio.SimpleAction,
-        parameter: None,
-    ) -> None:
-        subprocess.Popen(
-            [
-                "bash",
-                os.path.join(
-                    os.path.dirname(__file__),
-                    "operations",
-                    "regenerate_commits_cinnamon.sh",
-                ),
-            ]
-        )
-
-    def update_arrow_style_gnome(
-        self,
-        action: Gio.SimpleAction,
-        parameter: None,
-    ) -> None:
-        # There are lots of conventions here and there, that's fine
-        subprocess.Popen(
-            [
-                "bash",
-                os.path.join(
-                    os.path.dirname(__file__),
-                    "operations",
-                    "update_arrow_style_gnome.sh",
-                ),
-            ]
-        )
-
     def mark_as_reviewed(
         self,
         action: Gio.SimpleAction,
         parameter: GLib.Variant,
     ) -> None:
-        pass
-        # original_commit_subject = parameter.get_string()
-        # signature = self.make_git_signature()
-        # if self._settings != None:
-        #     prefix = str(self._settings.get_value("commit-message-prefix").unpack())
-        #     commit_message = f"squash! {original_commit_subject}\n\n{prefix}{signature_to_string(signature)}"
-        # else:
-        #     commit_message = f"squash! {original_commit_subject}\n\nChangelog-reviewed-by: {signature_to_string(signature)}"
-        # self.create_empty_commit(
-        #     target_subject=original_commit_subject,
-        #     message=commit_message,
-        #     author=signature,
-        # )
+        original_commit_subject = parameter.get_string()
+        signature = self.make_git_signature()
+        commit_message = f"squash! {original_commit_subject}\n\nChangelog-Reviewed-By: {signature_to_string(signature)}"
+        self.create_empty_commit(
+            target_subject=original_commit_subject,
+            message=commit_message,
+            author=signature,
+        )
 
     def edit_commit_message(
         self,
@@ -479,30 +428,41 @@ class NonemastWindow(Adw.ApplicationWindow):
                 GLib.idle_add(self.show_error, error)
                 return
 
-            try:
-                ref_resolved = Ggit.OId.new_from_string(
-                    os.environ["NONEMAST_NIXPKGS_BASE_COMMIT"]
+            bases = []
+            if self._base_revspec is not None:
+                base = self._repo.revparse(self._base_revspec).get_id()
+                bases.append(base)
+            else:
+                # Determine merge bases between the current branch and master and staging branches.
+                merge_base_staging = get_merge_base(
+                    self._repo,
+                    head.get_target(),
+                    self._repo.lookup_branch(
+                        f"{nixpkgs_remote_name}/staging",
+                        Ggit.BranchType.REMOTE,
+                    ).get_target(),
                 )
-            except:
-                ref_resolved = self._repo.lookup_reference_dwim(
-                    os.environ["NONEMAST_NIXPKGS_BASE_COMMIT"]
-                ).get_target()
-
-            # Handle fake but valid-in-format oid
-            self._repo.lookup_commit(ref_resolved)
-
-            nixpkgs_base_master = get_merge_base(
-                self._repo, head.get_target(), ref_resolved
-            )
+                if merge_base_staging is not None:
+                    bases.append(merge_base_staging)
+                merge_base_master = get_merge_base(
+                    self._repo,
+                    head.get_target(),
+                    self._repo.lookup_branch(
+                        f"{nixpkgs_remote_name}/master",
+                        Ggit.BranchType.REMOTE,
+                    ).get_target(),
+                )
+                if merge_base_master is not None:
+                    bases.append(merge_base_master)
 
             # Traverse the commit list until one of the merge bases or a limit is reached.
-            n_revisions = 1000
+            n_revisions = 500
             revwalker: Ggit.RevisionWalker = Ggit.RevisionWalker.new(self._repo)
             revwalker.set_sort_mode(
                 Ggit.SortMode.TIME | Ggit.SortMode.TOPOLOGICAL | Ggit.SortMode.REVERSE
             )
-            if nixpkgs_base_master is not None:
-                revwalker.hide(nixpkgs_base_master)
+            for base in bases:
+                revwalker.hide(base)
             oid = head.get_target()
             revwalker.push(oid)
 
@@ -519,30 +479,3 @@ class NonemastWindow(Adw.ApplicationWindow):
             GLib.idle_add(self.populate_updates, updates)
         except GLib.Error as error:
             GLib.idle_add(self.show_error, error)
-
-
-@Gtk.Template(resource_path="/cz/ogion/Nonemast/gtk/preferences-window.ui")
-class PreferencesWindow(Adw.PreferencesWindow):
-    __gtype_name__ = "PreferencesWindow"
-
-    reviewed_regex = Gtk.Template.Child()
-    nixpkgs_path = Gtk.Template.Child()
-
-    def __init__(self, window):
-        Adw.PreferencesWindow.__init__(self)
-
-        self.props.modal = True
-        self.set_transient_for(window)
-        self.settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
-
-        self.settings.bind(
-            "reviewed-regex", self.reviewed_regex, "text", Gio.SettingsBindFlags.DEFAULT
-        )
-        self.settings.bind(
-            "nixpkgs-path", self.nixpkgs_path, "text", Gio.SettingsBindFlags.DEFAULT
-        )
-
-    @Gtk.Template.Callback()
-    def on_reset_button_clicked(self, *args):
-        self.settings.reset("reviewed-regex")
-        self.settings.reset("nixpkgs-path")

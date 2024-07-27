@@ -5,15 +5,12 @@ from gi.repository import Ggit
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
-from linkify_it import LinkifyIt
-from typing import Optional
+from .message_utils import (
+    has_changelog_reviewed_tag,
+    find_changelog_link,
+    linkify_html,
+)
 import html
-import os
-import re
-
-
-def has_changelog_reviewed_tag(regex: str, line: str) -> bool:
-    return re.match(regex, line)
 
 
 def try_getting_corresponding_github_link(url: str) -> str:
@@ -21,45 +18,9 @@ def try_getting_corresponding_github_link(url: str) -> str:
         "https://gitlab.gnome.org/GNOME/",
         "https://github.com/GNOME/",
     )
-
-    for i in ["xfce", "thunar-plugins", "panel-plugins", "apps"]:
-        url = url.replace(
-            f"https://gitlab.xfce.org/{i}/",
-            "https://github.com/xfce-mirror/",
-        )
-
-    if "https://github.com/" in url:
-        url = url.replace("/-/", "/")
-        url = url.replace("...", "..")
+    url = url.replace("/-/", "/")
 
     return url
-
-
-def find_changelog_link(lines: list[str]) -> Optional[str]:
-    # Heuristics: First line starting with a URL is likely a changelog.
-    for line in lines:
-        line = line.strip()
-        if line.startswith("https://"):
-            return line
-    return None
-
-
-def linkify_html(text: str) -> str:
-    linkify = LinkifyIt()
-
-    if not linkify.test(text):
-        return ""
-
-    result = ""
-    last_index = 0
-    for match in linkify.match(text):
-        link = f"<a href='{html.escape(match.url)}'>{html.escape(match.text)}</a>"
-        result += html.escape(text[last_index : match.index]) + link
-        last_index = match.last_index
-
-    result += text[last_index:]
-
-    return result
 
 
 class CommitInfo(GObject.Object):
@@ -136,9 +97,6 @@ class PackageUpdate(GObject.Object):
     commit_message_is_edited = GObject.Property(type=bool, default=False)
     editing_stack_page = GObject.Property(type=str, default="not-editing")
     final_commit_message_rich = GObject.Property(type=str)
-    changelog_reviewed_by_suggestion = GObject.Property(
-        type=str, default="Changelog-reviewed-by: Foo bar <abc@example.com>"
-    )
 
     def __init__(
         self,
@@ -152,22 +110,6 @@ class PackageUpdate(GObject.Object):
         self._subject = subject
         self._commits = Gio.ListStore.new(CommitInfo)
         self._message_lines: list[str] = []
-        if os.environ.get("NONEMAST_NO_GSCHEMA") == "1":
-            self._settings = None
-        else:
-            # self._settings = None
-            self._settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
-
-        try:
-            a_config: Ggit.Config = self._repo.get_config().snapshot()
-            s_author_name = a_config.get_string("user.name")
-            s_author_email = a_config.get_string("user.email")
-        except:
-            s_author_name, s_author_email = "Foo bar", "123@example.com"
-
-        self.changelog_reviewed_by_suggestion = GLib.markup_escape_text(
-            f"Changelog-reviewed-by: {s_author_name} <{s_author_email}>"
-        )
 
         self.bind_property(
             "subject",
@@ -219,13 +161,8 @@ class PackageUpdate(GObject.Object):
         if old_message_lines != self._message_lines:
             self.notify("final-commit-message")
 
-        if self._settings != None:
-            regex = str(self._settings.get_value("reviewed-regex").unpack())
-        else:
-            regex = r"^Changelog-reviewed-by: "
-
         self.props.changes_reviewed = any(
-            has_changelog_reviewed_tag(regex, line) for line in self._message_lines
+            has_changelog_reviewed_tag(line) for line in self._message_lines
         )
         url = find_changelog_link(self._message_lines)
         if url is None:

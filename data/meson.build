@@ -1,6 +1,26 @@
 # SPDX-FileCopyrightText: 2022 Jan Tojnar
 # SPDX-License-Identifier: MIT
 
+desktop_file = i18n.merge_file(
+  input: f'@application_id@.desktop.in',
+  output: f'@application_id@.desktop',
+  type: 'desktop',
+  po_dir: '../po',
+  install: true,
+  install_dir: nonemast_datadir / 'applications',
+)
+
+desktop_utils = find_program('desktop-file-validate', required: false)
+if desktop_utils.found()
+  test(
+    'Validate desktop file',
+    desktop_utils,
+    args: [
+      desktop_file,
+    ],
+  )
+endif
+
 appstream_file = i18n.merge_file(
   input: f'@application_id@.appdata.xml.in',
   output: f'@application_id@.appdata.xml',
@@ -20,10 +40,5 @@ if appstream_util.found()
     ],
   )
 endif
-
-install_data(
-  'cz.ogion.Nonemast.gschema.xml',
-  install_dir: get_option('datadir') / 'glib-2.0' / 'schemas'
-)
 
 subdir('icons')

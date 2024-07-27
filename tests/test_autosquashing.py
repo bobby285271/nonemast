@@ -2,9 +2,6 @@
 # SPDX-License-Identifier: MIT
 
 import gi
-import os
-
-os.environ.setdefault("NONEMAST_NO_GSCHEMA", "1")
 
 gi.require_version("Ggit", "1.0")
 

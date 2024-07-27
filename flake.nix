@@ -46,9 +46,11 @@
   ) // {
     overlay = final: prev: {
       nonemast =
-        final.stdenv.mkDerivation rec {
+        final.python3.pkgs.buildPythonApplication rec {
           pname = "nonemast";
-          version = "0.9.1+bobby285271";
+          version = "0.1.0";
+
+          format = "other";
 
           src = final.nix-gitignore.gitignoreSource [] ./.;
 
@@ -56,11 +58,11 @@
             meson
             ninja
             pkg-config
+            blueprint-compiler
             gobject-introspection
             desktop-file-utils
             gtk4 # for gtk4-update-icon-cache
             wrapGAppsHook4
-            python3.pkgs.wrapPython
           ];
 
           buildInputs = with final; [
@@ -81,19 +83,18 @@
 
           doCheck = true;
 
-          preCheck = ''
-            buildPythonPath "$out $propagatedBuildInputs"
-            patchPythonScript ../tests/test_autosquashing.py
+          checkPhase = ''
+            runHook preCheck
 
-            export NONEMAST_NO_GSCHEMA=1
+            # buildPythonPackage has doCheck enable installCheckPhase but ninja registers regular checkPhase
+            # so we need to run it manually.
+            meson test --print-errorlogs
+
+            runHook postCheck
           '';
 
-          preFixup = ''
-            gappsWrapperArgs+=(
-              --prefix PYTHONPATH : "$program_PYTHONPATH"
-              --prefix PATH : "${final.lib.makeBinPath [ final.gnome-text-editor final.gnome.zenity ]}"
-            )
-          '';
+          # Breaks some setup hooks.
+          strictDeps = false;
         };
     };
   };

@@ -3,7 +3,7 @@
 
 project(
   'nonemast',
-  version: '0.9.1+bobby285271',
+  version: '0.1.0',
   meson_version: '>= 0.64.0',
   license: 'MIT',
   default_options: [
@@ -22,13 +22,19 @@ python3 = python.find_installation(
   ],
 )
 
+blueprint_compiler = find_program(
+  'blueprint-compiler',
+  version: '>= 0.8.2',
+  required: true,
+  native: true,
+)
+
 dependency('gtk4', version: '>= 4.6.0')
-dependency('libadwaita-1', version: '>= 1.4.0')
+dependency('libadwaita-1', version: '>= 1.2.alpha')
 dependency('libgit2-glib-1.0', version: ['>= 1.0.0'])
 
 nonemast_prefix = get_option('prefix')
 nonemast_bindir = nonemast_prefix / get_option('bindir')
-nonemast_libexecdir = nonemast_prefix / get_option('libexecdir')
 nonemast_localedir = nonemast_prefix / get_option('localedir')
 nonemast_datadir = nonemast_prefix / get_option('datadir')
 nonemast_pkgdatadir = nonemast_datadir / meson.project_name()
@@ -50,6 +56,6 @@ devenv.prepend('XDG_DATA_DIRS', meson.current_source_dir() / 'data')
 meson.add_devenv(devenv)
 
 gnome.post_install(
-  glib_compile_schemas: true,
-  gtk_update_icon_cache: true
+  gtk_update_icon_cache: true,
+  update_desktop_database: true,
 )

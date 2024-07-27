@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2022 Jan Tojnar
 # SPDX-License-Identifier: MIT
 
-import os
 import sys
 
 from gi.repository import Adw
@@ -9,12 +8,14 @@ from gi.repository import Ggit
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-from .window import NonemastWindow, PreferencesWindow
+from .window import NonemastWindow
 from typing import Callable, Optional, Sequence, TypeVar
 
 
 class NonemastApplication(Adw.Application):
     """The main application singleton class."""
+
+    _base_revspec: Optional[str] = None
 
     def __init__(self, version: str):
         super().__init__(
@@ -23,29 +24,43 @@ class NonemastApplication(Adw.Application):
         )
         Ggit.init()
         self.version = version
+        self._setup_commandline()
         self.create_action("quit", self.on_quit_action, ["<primary>q"])
         self.create_action("about", self.on_about_action)
-        self.create_action("preferences", self.on_preferences_action)
 
-        if os.environ.get("NONEMAST_NO_GSCHEMA") == "1":
-            self._settings = None
-        else:
-            self._settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
+    def _setup_commandline(self):
+        self.add_main_option(
+            long_name="base-commit",
+            short_name=ord("b"),
+            flags=GLib.OptionFlags.NONE,
+            arg=GLib.OptionArg.STRING,
+            description="Revspec describing the first commit to include in the review (default: merge base between master and staging branches)",
+            arg_description="<rev>",
+        )
 
     def do_activate(self, repo_path: Optional[Gio.File] = None) -> None:
         win = self.props.active_window
         if not win:
-            if self._settings != None:
-                repo_path = Gio.File.new_for_path(
-                    str(self._settings.get_value("nixpkgs-path").unpack())
-                )
-            else:
-                repo_path = Gio.File.new_for_path("/home/bobby285271/nixpkgs")
-            win = NonemastWindow(application=self, repo_path=repo_path)
+            if repo_path is None:
+                repo_path = Gio.File.new_for_path(GLib.get_current_dir())
+            win = NonemastWindow(
+                application=self,
+                repo_path=repo_path,
+                base_revspec=self._base_revspec,
+            )
         win.present()
 
+    def do_handle_local_options(self, options: GLib.VariantDict) -> int:
+        if (base_revspec := options.lookup_value("base-commit")) is not None:
+            self._base_revspec = base_revspec.get_string()
+
+        return -1
+
     def do_open(self, files: Sequence[Gio.File], n_files: int, hint: str) -> None:
-        sys.exit("error: arguments shouldn't be handled by do_open.")
+        if n_files != 1:
+            sys.exit("error: nonemast expects exactly one path as an argument.")
+
+        self.do_activate(repo_path=files[0])
 
     def on_quit_action(
         self,
@@ -70,12 +85,6 @@ class NonemastApplication(Adw.Application):
             copyright="© 2022 Jan Tojnar",
         )
         about.present()
-
-    def on_preferences_action(self, widget, _):
-        """Callback for the app.preferences action."""
-        # print("app.preferences action activated")
-        preferences = PreferencesWindow(self.props.active_window)
-        preferences.present()
 
     T = TypeVar("T", bound=GLib.Variant | None)
 
