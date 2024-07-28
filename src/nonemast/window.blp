@@ -5,12 +5,12 @@ template $NonemastWindow: Adw.ApplicationWindow {
   title: _('Not Nearly Enough Masking Tape');
   default-width: 850;
   default-height: 500;
-  width-request: 850;
-  height-request: 500;
+  width-request: 300;
+  height-request: 300;
 
   Adw.Breakpoint {
     // Does not really support responsive yet https://github.com/jtojnar/nonemast/issues/7
-    condition ("max-width: 0sp")
+    condition ("max-width: 700")
 
     setters {
       split_view.collapsed: true;
@@ -18,7 +18,7 @@ template $NonemastWindow: Adw.ApplicationWindow {
   }
 
   Adw.NavigationSplitView split_view {
-    min-sidebar-width: 350;
+    min-sidebar-width: 300;
 
     sidebar: Adw.NavigationPage {
       title: _('Commits');

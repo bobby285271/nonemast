@@ -143,6 +143,7 @@ class NonemastWindow(Adw.ApplicationWindow):
     updates_list_stack = Gtk.Template.Child()
     updates_list_error = Gtk.Template.Child()
     updates_list_view = Gtk.Template.Child()
+    split_view = Gtk.Template.Child()
 
     # Mapping between updates’ commit subjects and their indices in updates_store.
     _updates_subject_indices: dict[str, int] = {}
@@ -383,6 +384,7 @@ class NonemastWindow(Adw.ApplicationWindow):
         _prop_name: Any,
     ) -> None:
         self.do_select_update(selection.get_selected_item())
+        self.split_view.set_show_content(True)
 
     def do_select_update(self, update: PackageUpdate) -> None:
         self.update_details.props.update = update
