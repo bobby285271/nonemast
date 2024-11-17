@@ -1,8 +1,6 @@
 # Not Nearly Enough Masking Tape
 
-This is bobby285271's nonemast fork, see the `NEWS.bobby285271.md` file for what is changed in this fork.
-
-**Some changes are really opinionated / untested and are not for others, you shouldn't use this fork if you are not bobby285271.**
+This is bobby285271's nonemast fork. **Some changes are really opinionated / untested and are not for others, you shouldn't use this fork if you are not bobby285271.**
 
 Original README:
 
