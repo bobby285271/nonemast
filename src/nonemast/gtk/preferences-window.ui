@@ -4,7 +4,7 @@
   <requires lib="gtk" version="4.0" />
   <requires lib="adw" version="1.0" />
 
-  <template class="PreferencesWindow" parent="AdwPreferencesWindow">
+  <template class="PreferencesDialog" parent="AdwPreferencesDialog">
     <child>
       <object class="AdwPreferencesPage">
         <child>

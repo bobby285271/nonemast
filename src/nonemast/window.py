@@ -522,17 +522,17 @@ class NonemastWindow(Adw.ApplicationWindow):
 
 
 @Gtk.Template(resource_path="/cz/ogion/Nonemast/gtk/preferences-window.ui")
-class PreferencesWindow(Adw.PreferencesWindow):
-    __gtype_name__ = "PreferencesWindow"
+class PreferencesDialog(Adw.PreferencesDialog):
+    __gtype_name__ = "PreferencesDialog"
 
     reviewed_regex = Gtk.Template.Child()
     nixpkgs_path = Gtk.Template.Child()
 
     def __init__(self, window):
-        Adw.PreferencesWindow.__init__(self)
+        Adw.PreferencesDialog.__init__(self)
 
-        self.props.modal = True
-        self.set_transient_for(window)
+        # self.props.modal = True
+        # self.set_transient_for(window)
         self.settings = Gio.Settings(schema_id="cz.ogion.Nonemast")
 
         self.settings.bind(

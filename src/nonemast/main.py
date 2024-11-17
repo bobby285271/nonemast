@@ -9,7 +9,7 @@ from gi.repository import Ggit
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-from .window import NonemastWindow, PreferencesWindow
+from .window import NonemastWindow, PreferencesDialog
 from typing import Callable, Optional, Sequence, TypeVar
 
 
@@ -73,8 +73,8 @@ class NonemastApplication(Adw.Application):
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
         # print("app.preferences action activated")
-        preferences = PreferencesWindow(self.props.active_window)
-        preferences.present()
+        preferences = PreferencesDialog(self.props.active_window)
+        preferences.present(self.props.active_window)
 
     T = TypeVar("T", bound=GLib.Variant | None)
 
