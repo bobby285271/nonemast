@@ -41,7 +41,23 @@ def find_changelog_link(lines: list[str]) -> Optional[str]:
         line = line.strip()
         if line.startswith("https://"):
             return line
-    # TODO: Try to generate Xfce commit changelogs (?)
+    for line in lines:
+        ss = re.search(r'([^:]+): (.*?) -> (.*?)$', line)
+        if line.startswith("xfce.") and ss:
+            prefix = ss.group(1).strip().replace("xfce.", "", 1)
+            xfcategory = "xfce"
+            if prefix.endswith("plugin"):
+                xfcategory = "panel-plugins"
+            for xfapp in ["catfish", "gigolo", "mousepad", "orage", "parole", "ristretto",
+                    "xfburn", "xfce4-dict", "xfce4-mixer", "xfce4-notifyd", "xfce4-panel-profiles",
+                    "xfce4-screensaver", "xfce4-screenshooter", "xfce4-taskmanager", "xfce4-terminal",
+                    "xfce4-volumed-pulse", "xfdashboard", "xfmpc"]:
+                if xfapp == prefix:
+                    xfcategory = "apps"
+
+            version1 = ss.group(2).strip()
+            version2 = ss.group(3).strip()
+            return f"https://gitlab.xfce.org/{xfcategory}/{prefix}/-/compare/{prefix}-{version1}...{prefix}-{version2}"
     return None
 
 
@@ -55,7 +71,7 @@ def linkify_html(text: str) -> str:
     last_index = 0
     for match in linkify.match(text):
         link = f"<a href='{html.escape(match.url)}'>{html.escape(match.text)}</a>"
-        result += html.escape(text[last_index : match.index]) + link
+        result += html.escape(text[last_index: match.index]) + link
         last_index = match.last_index
 
     result += text[last_index:]
@@ -235,7 +251,8 @@ class PackageUpdate(GObject.Object):
             url_github = try_getting_corresponding_github_link(url)
             if url_github != url:
                 self.props.changelog_link = (
-                    f"<b><a href='{html.escape(url_github)}'>{html.escape(url_github)}</a></b>\n\n<a href='{html.escape(url)}'>{html.escape(url)}</a>"
+                    f"<b><a href='{html.escape(url_github)}'>{html.escape(
+                        url_github)}</a></b>\n\n<a href='{html.escape(url)}'>{html.escape(url)}</a>"
                 )
             else:
                 self.props.changelog_link = (
