@@ -41,6 +41,7 @@ def find_changelog_link(lines: list[str]) -> Optional[str]:
         line = line.strip()
         if line.startswith("https://"):
             return line
+    # TODO: Try to generate Xfce commit changelogs (?)
     return None
 
 
@@ -231,10 +232,15 @@ class PackageUpdate(GObject.Object):
         if url is None:
             self.props.changelog_link = "No changelog detected."
         else:
-            url = try_getting_corresponding_github_link(url)
-            self.props.changelog_link = (
-                f"<a href='{html.escape(url)}'>{html.escape(url)}</a>"
-            )
+            url_github = try_getting_corresponding_github_link(url)
+            if url_github != url:
+                self.props.changelog_link = (
+                    f"<b><a href='{html.escape(url_github)}'>{html.escape(url_github)}</a></b>\n\n<a href='{html.escape(url)}'>{html.escape(url)}</a>"
+                )
+            else:
+                self.props.changelog_link = (
+                    f"<a href='{html.escape(url)}'>{html.escape(url)}</a>"
+                )
 
     @GObject.Property(type=str)
     def subject(self):
