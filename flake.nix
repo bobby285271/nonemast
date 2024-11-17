@@ -48,7 +48,7 @@
       nonemast =
         final.stdenv.mkDerivation rec {
           pname = "nonemast";
-          version = "0.9.1+bobby285271";
+          version = "0.0.0";
 
           src = final.nix-gitignore.gitignoreSource [] ./.;
 
@@ -91,7 +91,7 @@
           preFixup = ''
             gappsWrapperArgs+=(
               --prefix PYTHONPATH : "$program_PYTHONPATH"
-              --prefix PATH : "${final.lib.makeBinPath [ final.gnome-text-editor final.gnome.zenity ]}"
+              --prefix PATH : "${final.lib.makeBinPath [ final.gnome-text-editor final.zenity ]}"
             )
           '';
         };
