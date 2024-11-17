@@ -2,7 +2,7 @@
 
 - The Nix packaging ensures `gnome-text-editor` in `PATH`.
 - `zenity` is needed for shell scripts integration.
-- Ported to `AdwNavigationSplitView`, `AdwAboutDialog` (require libadwaita 1.6.0 or later).
+- Ported to `AdwNavigationSplitView`, `AdwAboutDialog` (requires libadwaita 1.5.0 or later).
 
 ### Breaking changes
 
