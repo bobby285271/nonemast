@@ -31,7 +31,7 @@ nix_eval_checkout() {
 
 is_running_in_nixpkgs() {
     # ret: 0 for yes, else no
-    nix_eval_wip "cinnamon.cinnamon-common.meta.homepage"
+    nix_eval_wip "cinnamon-common.meta.homepage"
     echo "${ret_nix_eval_wip}" | grep "https://github.com/linuxmint/cinnamon"
     ret_is_running_in_nixpkgs=${?}
 }
