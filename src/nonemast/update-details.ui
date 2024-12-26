@@ -8,6 +8,7 @@
 				<child>
 					<object class="AdwActionRow">
 						<property name="use-markup">true</property>
+						<property name="title-selectable">true</property>
 						<binding name="title">
 							<lookup name="changelog-link">
 								<lookup name="update">UpdateDetails</lookup>
