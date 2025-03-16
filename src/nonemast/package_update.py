@@ -13,7 +13,7 @@ import re
 
 
 def has_changelog_reviewed_tag(regex: str, line: str) -> bool:
-    return re.match(regex, line)
+    return re.match(regex, line, re.IGNORECASE)
 
 
 def try_getting_corresponding_github_link(url: str) -> str:
