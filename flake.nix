@@ -12,8 +12,15 @@
     utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, flake-compat, nixpkgs, utils }:
-    utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      flake-compat,
+      nixpkgs,
+      utils,
+    }:
+    utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -21,12 +28,15 @@
             self.overlay
           ];
         };
-      in {
+      in
+      {
         devShells = {
           default = pkgs.mkShell {
-            nativeBuildInputs = pkgs.nonemast.nativeBuildInputs ++ (with pkgs; [
-              python3.pkgs.black
-            ]);
+            nativeBuildInputs =
+              pkgs.nonemast.nativeBuildInputs
+              ++ (with pkgs; [
+                python3.pkgs.black
+              ]);
 
             inherit (pkgs.nonemast) buildInputs propagatedBuildInputs checkInputs;
           };
@@ -43,14 +53,14 @@
           };
         };
       }
-  ) // {
-    overlay = final: prev: {
-      nonemast =
-        final.stdenv.mkDerivation rec {
+    )
+    // {
+      overlay = final: prev: {
+        nonemast = final.stdenv.mkDerivation rec {
           pname = "nonemast";
           version = "0.0.0";
 
-          src = final.nix-gitignore.gitignoreSource [] ./.;
+          src = final.nix-gitignore.gitignoreSource [ ] ./.;
 
           nativeBuildInputs = with final; [
             meson
@@ -91,10 +101,15 @@
           preFixup = ''
             gappsWrapperArgs+=(
               --prefix PYTHONPATH : "$program_PYTHONPATH"
-              --prefix PATH : "${final.lib.makeBinPath [ final.gnome-text-editor final.zenity ]}"
+              --prefix PATH : "${
+                final.lib.makeBinPath [
+                  final.gnome-text-editor
+                  final.zenity
+                ]
+              }"
             )
           '';
         };
+      };
     };
-  };
 }
