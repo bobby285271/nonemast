@@ -173,9 +173,7 @@ class PackageUpdate(GObject.Object):
         type=str, default="Changelog-reviewed-by: Foo bar <abc@example.com>"
     )
 
-    built_on_suggestion = GObject.Property(
-        type=str, default="Built-on: unknown"
-    )
+    built_on_suggestion = GObject.Property(type=str, default="Built-on: unknown")
 
     def __init__(
         self,
