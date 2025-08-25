@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Install Nix
-      uses: cachix/install-nix-action@v23
+      uses: cachix/install-nix-action@v31
 
     - name: Build Nix package
       run: nix-build
@@ -26,7 +26,7 @@ jobs:
     - name: Run tests
       run: nix-shell --run 'meson test -C _build'
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: testlog
