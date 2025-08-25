@@ -173,6 +173,10 @@ class PackageUpdate(GObject.Object):
         type=str, default="Changelog-reviewed-by: Foo bar <abc@example.com>"
     )
 
+    built_on_suggestion = GObject.Property(
+        type=str, default="Built-on: unknown"
+    )
+
     def __init__(
         self,
         repo: Ggit.Repository,
@@ -185,6 +189,7 @@ class PackageUpdate(GObject.Object):
         self._subject = subject
         self._commits = Gio.ListStore.new(CommitInfo)
         self._message_lines: list[str] = []
+
         if os.environ.get("NONEMAST_NO_GSCHEMA") == "1":
             self._settings = None
         else:
@@ -200,6 +205,15 @@ class PackageUpdate(GObject.Object):
 
         self.changelog_reviewed_by_suggestion = GLib.markup_escape_text(
             f"Changelog-reviewed-by: {s_author_name} <{s_author_email}>"
+        )
+
+        try:
+            head_commit_sha = self._repo.get_head().get_target().to_string()
+        except:
+            head_commit_sha = "unknown"
+
+        self.built_on_suggestion = GLib.markup_escape_text(
+            f"Built-on: {head_commit_sha}"
         )
 
         self.bind_property(

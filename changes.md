@@ -20,3 +20,4 @@
 - Generate Xfce GitLab diff URL if the commit is likely related to Xfce updates.
 - Convert Xfce GitLab URL to GitHub mirror URL.
 - Sidebar width is now hardcoded. For now responsive is not a focus in this fork.
+- Support marking a commit as built.
