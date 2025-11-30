@@ -89,6 +89,7 @@ commit_pkgs_change() {
 
     nix_eval_wip "${1}.src.meta.homepage"
     local diffurl="$ret_nix_eval_wip/compare/${old_rev}...${new_rev}"
+    diffurl="$(echo "$diffurl" | sed 's@refs/tags/@@g')"
 
     nix_eval_wip "${1}.meta.position"
     local dir_to_add=$(dirname $(echo $ret_nix_eval_wip | cut -d : -f 1))
