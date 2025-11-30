@@ -2,7 +2,7 @@
 <schemalist gettext-domain="code">
   <schema id="cz.ogion.Nonemast" path="/cz/ogion/Nonemast/">
     <key name="reviewed-regex" type="s">
-      <default>"^Changelog-reviewed-by: "</default>
+      <default>"^Changelog-Reviewed-By: "</default>
     </key>
     <key name="nixpkgs-path" type="s">
       <default>"/home/bobby285271/nixpkgs"</default>

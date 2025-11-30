@@ -310,7 +310,7 @@ class NonemastWindow(Adw.ApplicationWindow):
         #     prefix = str(self._settings.get_value("commit-message-prefix").unpack())
         #     commit_message = f"squash! {original_commit_subject}\n\n{prefix}{signature_to_string(signature)}"
         # else:
-        #     commit_message = f"squash! {original_commit_subject}\n\nChangelog-reviewed-by: {signature_to_string(signature)}"
+        #     commit_message = f"squash! {original_commit_subject}\n\nChangelog-Reviewed-By: {signature_to_string(signature)}"
         # self.create_empty_commit(
         #     target_subject=original_commit_subject,
         #     message=commit_message,

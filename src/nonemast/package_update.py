@@ -170,10 +170,10 @@ class PackageUpdate(GObject.Object):
     editing_stack_page = GObject.Property(type=str, default="not-editing")
     final_commit_message_rich = GObject.Property(type=str)
     changelog_reviewed_by_suggestion = GObject.Property(
-        type=str, default="Changelog-reviewed-by: Foo bar <abc@example.com>"
+        type=str, default="Changelog-Reviewed-By: Foo bar <abc@example.com>"
     )
 
-    built_on_suggestion = GObject.Property(type=str, default="Built-on: unknown")
+    built_on_suggestion = GObject.Property(type=str, default="Built-On: unknown")
 
     def __init__(
         self,
@@ -202,7 +202,7 @@ class PackageUpdate(GObject.Object):
             s_author_name, s_author_email = "Foo bar", "123@example.com"
 
         self.changelog_reviewed_by_suggestion = GLib.markup_escape_text(
-            f"Changelog-reviewed-by: {s_author_name} <{s_author_email}>"
+            f"Changelog-Reviewed-By: {s_author_name} <{s_author_email}>"
         )
 
         try:
@@ -211,7 +211,7 @@ class PackageUpdate(GObject.Object):
             head_commit_sha = "unknown"
 
         self.built_on_suggestion = GLib.markup_escape_text(
-            f"Built-on: {head_commit_sha}"
+            f"Built-On: {head_commit_sha}"
         )
 
         self.bind_property(
@@ -267,7 +267,7 @@ class PackageUpdate(GObject.Object):
         if self._settings != None:
             regex = str(self._settings.get_value("reviewed-regex").unpack())
         else:
-            regex = r"^Changelog-reviewed-by: "
+            regex = r"^Changelog-Reviewed-By: "
 
         self.props.changes_reviewed = any(
             has_changelog_reviewed_tag(regex, line) for line in self._message_lines
