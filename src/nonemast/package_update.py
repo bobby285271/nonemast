@@ -43,11 +43,36 @@ def find_changelog_link(lines: list[str]) -> Optional[str]:
             return line
     for line in lines:
         ss = re.search(r"([^:]+): (.*?) -> (.*?)$", line)
-        if line.startswith("xfce.") and ss:
-            prefix = ss.group(1).strip().replace("xfce.", "", 1)
+        prefix = ss.group(1).strip() if ss else ""
+        if ss and (
+            prefix.startswith("xfce")
+            or prefix.startswith("thunar")
+            or prefix
+            in [
+                "garcon",
+                "libxfce4ui",
+                "libxfce4util",
+                "libxfce4windowing",
+                "tumbler",
+                "xfconf",
+                "xfdesktop",
+                "xfwm4",
+                "catfish",
+                "gigolo",
+                "mousepad",
+                "orage",
+                "parole",
+                "ristretto",
+                "xfburn",
+                "xfdashboard",
+                "xfmpc",
+            ]
+        ):
             xfcategory = "xfce"
-            if prefix.endswith("plugin"):
+            if prefix.endswith("plugin") and prefix.startswith("xfce"):
                 xfcategory = "panel-plugins"
+            if prefix.endswith("plugins") and prefix.startswith("thunar"):
+                xfcategory = "thunar-plugins"
             for xfapp in [
                 "catfish",
                 "gigolo",
